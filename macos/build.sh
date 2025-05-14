@@ -12,7 +12,8 @@ if [[ ${PODVER} == "" ]]; then
 	exit 0
 fi
 
-sudo -u $SUDO_USER brew install autoconf automake libtool create-dmg wget pkg-config
+# sudo -u $SUDO_USER brew install autoconf automake libtool create-dmg wget pkg-config
+brew install autoconf automake libtool create-dmg wget pkg-config
 
 export ORIGDIR="$(pwd)"
 export PODLIBS="${ORIGDIR}/libs"
