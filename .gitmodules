@@ -1,4 +1,5 @@
 [submodule "wire-pod"]
 	path = wire-pod
 	url = /Users/rxcs/Dev/etal/wire-pod
+	branch = feature/build
 	# url = https://github.com/neurral/wire-pod
