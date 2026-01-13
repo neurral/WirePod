@@ -3,7 +3,9 @@
 set -e
 
 WP_COMMIT_HASH=$(cd ../wire-pod && git rev-parse --short HEAD)
-GOLDFLAGS="-X 'github.com/kercre123/wire-pod/chipper/pkg/vars.CommitSHA=${WP_COMMIT_HASH}'"
+GOLDFLAGS="-X 'github.com/neurral/wire-pod/chipper/pkg/vars.CommitSHA=$
+{WP_COMMIT_HASH}'"
+
 
 export PODVER="$1"
 
@@ -104,13 +106,13 @@ function buildApp() {
     echo "<plist version="1.0">" >> $PLISTFILE
     echo "<dict>" >> $PLISTFILE
     echo "  <key>CFBundleGetInfoString</key>" >> $PLISTFILE
-    echo "  <string>WirePod</string>" >> $PLISTFILE
+    echo "  <string>WirePod ${PODVER}</string>" >> $PLISTFILE
     echo "  <key>CFBundleExecutable</key>" >> $PLISTFILE
     echo "  <string>WirePod</string>" >> $PLISTFILE
     echo "  <key>CFBundleIdentifier</key>" >> $PLISTFILE
-    echo "  <string>io.github.kercre123</string>" >> $PLISTFILE
+    echo "  <string>io.github.neurral</string>" >> $PLISTFILE
     echo "  <key>CFBundleName</key>" >> $PLISTFILE
-    echo "  <string>WirePod</string>" >> $PLISTFILE
+    echo "  <string>WirePod ${PODVER}</string>" >> $PLISTFILE
     echo "  <key>CFBundleIconFile</key>" >> $PLISTFILE
     echo "  <string>icon.icns</string>" >> $PLISTFILE
     echo "  <key>CFBundleVersion</key>" >> $PLISTFILE
