@@ -23,7 +23,7 @@ import (
 	"github.com/neurral/wire-pod/chipper/pkg/mdnshandler"
 	"github.com/neurral/wire-pod/chipper/pkg/vars"
 	wirepod_vosk "github.com/neurral/wire-pod/chipper/pkg/wirepod/stt/vosk"
-	"github.com/wlynxg/anet"
+	"../third-party/github.com/wlynxg/anet"
 )
 
 var DataPath string

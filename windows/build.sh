@@ -30,9 +30,9 @@ export PODLIBS="${ORIGDIR}/libs"
 mkdir -p "${PODLIBS}"
 
 if [[ ! -d "${PODLIBS}/ogg" ]]; then
-    echo "ogg directory doesn't exist. cloning and building"
+    echo "ogg directory doesn't exist. copying from local repository and building"
     rm -rf ogg
-    git clone https://github.com/xiph/ogg --depth=1
+    cp -r ../third-party/github.com/xiph/ogg ./ogg
     cd ogg
     ./autogen.sh
     ./configure --host=${PODHOST} --prefix="${PODLIBS}/ogg"
@@ -42,9 +42,9 @@ if [[ ! -d "${PODLIBS}/ogg" ]]; then
 fi
 
 if [[ ! -d "${PODLIBS}/opus" ]]; then
-    echo "opus directory doesn't exist. cloning and building"
+    echo "opus directory doesn't exist. copying from local repository and building"
     rm -rf opus
-    git clone https://github.com/xiph/opus --depth=1
+    cp -r ../third-party/github.com/xiph/opus ./opus
     cd opus
     ./autogen.sh
     ./configure --host=${PODHOST} --prefix="${PODLIBS}/opus"
@@ -54,11 +54,9 @@ if [[ ! -d "${PODLIBS}/opus" ]]; then
 fi
 
 if [[ ! -d ${PODLIBS}/vosk ]]; then
-    echo "getting vosk from alphacep releases page"
+    echo "copying vosk from local repository"
     cd "${PODLIBS}"
-    wget https://github.com/alphacep/vosk-api/releases/download/v0.3.45/vosk-win64-0.3.45.zip
-    unzip vosk-win64-0.3.45.zip
-    mv vosk-win64-0.3.45 vosk
+    cp -r ../../third-party/github.com/alphacep/vosk-api/lib/vosk-win64-0.3.45 ./vosk
     cd "${ORIGDIR}"
 fi
 

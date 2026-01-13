@@ -38,9 +38,9 @@ function buildBinary() {
 
     if [[ ! -d ${PODLIBS}/opus/$1 ]]; then
         if [[ ! -d opus ]]; then
-            echo "opus directory doesn't exist. cloning"
+            echo "opus directory doesn't exist. copying from local repository"
             rm -rf opus
-            git clone https://github.com/xiph/opus --depth=1
+            cp -r ../third-party/github.com/xiph/opus ./opus
         fi
         cd opus
         ./autogen.sh
@@ -73,11 +73,9 @@ function buildApp() {
     mkdir -p ${PODLIBS}
 
     if [[ ! -d ${PODLIBS}/vosk ]]; then
-        echo "getting vosk from alphacep releases page"  
+        echo "copying vosk from local repository"
         cd ${PODLIBS}
-        wget https://github.com/alphacep/vosk-api/releases/download/v0.3.42/vosk-osx-0.3.42.zip
-        unzip vosk-osx-0.3.42.zip
-        mv vosk-osx-0.3.42 vosk
+        cp -r ../../third-party/github.com/alphacep/vosk-api/lib/vosk-osx-0.3.42 ./vosk
         cd ${ORIGDIR}
     fi
 
