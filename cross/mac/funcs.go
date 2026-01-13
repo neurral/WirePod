@@ -87,6 +87,18 @@ func (w *MacOS) ReadConfig() (all.WPConfig, error) {
 	}
 	var conf all.WPConfig
 	json.Unmarshal(file, &conf)
+
+	// Update version from version file if it has changed
+	execu, _ := os.Executable()
+	ver, err := os.ReadFile(filepath.Join(filepath.Dir(execu), "/../Resources/version"))
+	if err == nil {
+		currentVersion := strings.TrimSpace(string(ver))
+		if conf.Version != currentVersion {
+			conf.Version = currentVersion
+			w.WriteConfig(conf)
+		}
+	}
+
 	return conf, nil
 }
 
