@@ -12,18 +12,18 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/wlynxg/anet"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"github.com/neurral/wire-pod/chipper/pkg/initwirepod"
-	"github.com/neurral/wire-pod/chipper/pkg/logger"
-	"github.com/neurral/wire-pod/chipper/pkg/mdnshandler"
-	"github.com/neurral/wire-pod/chipper/pkg/vars"
-	wirepod_vosk "github.com/neurral/wire-pod/chipper/pkg/wirepod/stt/vosk"
-	"../third-party/github.com/wlynxg/anet"
+	"github.com/kercre123/wire-pod/chipper/pkg/initwirepod"
+	"github.com/kercre123/wire-pod/chipper/pkg/logger"
+	"github.com/kercre123/wire-pod/chipper/pkg/mdnshandler"
+	"github.com/kercre123/wire-pod/chipper/pkg/vars"
+	wirepod_vosk "github.com/kercre123/wire-pod/chipper/pkg/wirepod/stt/vosk"
 )
 
 var DataPath string

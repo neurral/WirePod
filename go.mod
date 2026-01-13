@@ -1,6 +1,8 @@
 module github.com/neurral/WirePod
 
-go 1.18
+go 1.21
+
+toolchain go1.24.2
 
 require (
 	fyne.io/fyne/v2 v2.5.0
@@ -9,7 +11,8 @@ require (
 	github.com/fforchino/vector-go-sdk v0.0.0-20231108155304-62168f3595d6
 	github.com/getlantern/systray v1.2.2
 	github.com/go-ole/go-ole v1.3.0
-	github.com/neurral/wire-pod/chipper v1.5.6
+	github.com/kercre123/WirePod v1.2.16
+	github.com/kercre123/wire-pod/chipper v1.5.8
 	github.com/ncruces/zenity v0.10.10
 	github.com/soheilhy/cmux v0.1.5
 	github.com/wlynxg/anet v0.0.1
@@ -18,13 +21,13 @@ require (
 )
 
 require (
+	al.essio.dev/pkg/shellescape v1.5.1 // indirect
 	fyne.io/systray v1.11.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/VividCortex/ewma v1.1.1 // indirect
 	github.com/akavel/rsrc v0.10.2 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20231202071711-9a357b53e9c9 // indirect
-	github.com/alessio/shellescape v1.4.1 // indirect
 	github.com/aws/aws-sdk-go v1.34.28 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bramvdbogaerde/go-scp v1.2.1 // indirect
@@ -70,8 +73,9 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josephspurrier/goversioninfo v1.4.0 // indirect
 	github.com/jsummers/gobmp v0.0.0-20230614200233-a9de23ed2e25 // indirect
+	github.com/kercre123/vosk-api/go v1.0.2 // indirect
 	github.com/kercre123/zeroconf v1.0.1 // indirect
-	github.com/lib/pq v1.7.0 // indirect
+	github.com/lib/pq v1.10.9 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
@@ -138,13 +142,23 @@ require (
 )
 
 replace github.com/digital-dream-labs/api => ./third-party/github.com/digital-dream-labs/api
+
 replace github.com/digital-dream-labs/hugh => ./third-party/github.com/digital-dream-labs/hugh
+
 replace github.com/fforchino/vector-go-sdk => ./third-party/github.com/fforchino/vector-go-sdk
+
 replace github.com/bramvdbogaerde/go-scp => ./third-party/github.com/bramvdbogaerde/go-scp
+
 replace github.com/pkg/errors => ./third-party/github.com/pkg/errors
+
 replace github.com/sashabaranov/go-openai => ./third-party/github.com/sashabaranov/go-openai
+
 replace github.com/soundhound/houndify-sdk-go => ./third-party/github.com/soundhound/houndify-sdk-go
+
 replace github.com/vadv/gopher-lua-libs => ./third-party/github.com/vadv/gopher-lua-libs
+
 replace github.com/yuin/gopher-lua => ./third-party/github.com/yuin/gopher-lua
-replace github.com/wlynxg/anet => ./third-party/github.com/wlynxg/anet
+
 replace github.com/neurral/wire-pod/chipper => ./wire-pod/chipper
+
+replace github.com/wlynxg/anet => ./third-party/github.com/wlynxg/anet

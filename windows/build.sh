@@ -3,7 +3,7 @@
 export BUILDFILES="./cmd"
 
 WP_COMMIT_HASH=$(cd ../wire-pod && git rev-parse --short HEAD)
-GOLDFLAGS="-X 'github.com/neurral/wire-pod/chipper/pkg/vars.CommitSHA=${WP_COMMIT_HASH}'"
+GOLDFLAGS="-X 'github.com/kercre123/wire-pod/chipper/pkg/vars.CommitSHA=${WP_COMMIT_HASH}'"
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
     export CC=x86_64-w64-mingw32-gcc

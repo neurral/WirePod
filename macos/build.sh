@@ -3,8 +3,7 @@
 set -e
 
 WP_COMMIT_HASH=$(cd ../wire-pod && git rev-parse --short HEAD)
-GOLDFLAGS="-X 'github.com/neurral/wire-pod/chipper/pkg/vars.CommitSHA=$
-{WP_COMMIT_HASH}'"
+GOLDFLAGS="-X 'github.com/neurral/wire-pod/chipper/pkg/vars.CommitSHA=${WP_COMMIT_HASH}'"
 
 
 export PODVER="$1"
@@ -14,7 +13,7 @@ if [[ ${PODVER} == "" ]]; then
 	exit 0
 fi
 
-# sudo -u $SUDO_USER brew install autoconf automake libtool create-dmg wget pkg-config
+# -u $SUDO_USER brew install autoconf automake libtool create-dmg wget pkg-config
 brew install autoconf automake libtool create-dmg wget pkg-config
 
 export ORIGDIR="$(pwd)"
@@ -96,8 +95,8 @@ function buildApp() {
     buildBinary "arm64"
     buildBinary "amd64"
 
-    sudo lipo -create ${PODLIBS}/opus/arm64/lib/libopus.0.dylib ${PODLIBS}/opus/amd64/lib/libopus.0.dylib -output ${PODLIBS}/opus/libopus.0.dylib
-    sudo lipo -create tmp/WirePod-arm64 tmp/WirePod-amd64 -output ${MACOS}/WirePod
+    lipo -create ${PODLIBS}/opus/arm64/lib/libopus.0.dylib ${PODLIBS}/opus/amd64/lib/libopus.0.dylib -output ${PODLIBS}/opus/libopus.0.dylib
+    lipo -create tmp/WirePod-arm64 tmp/WirePod-amd64 -output ${MACOS}/WirePod
 
     echo "<?xml version="1.0" encoding="UTF-8"?>" > $PLISTFILE
     echo "<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">" >> $PLISTFILE
@@ -119,9 +118,12 @@ function buildApp() {
     echo "  <string>6.0</string>" >> $PLISTFILE
     echo "  <key>CFBundlePackageType</key>" >> $PLISTFILE
     echo "  <string>APPL</string>" >> $PLISTFILE
-    echo "  <key>NSHighResolutionCapable</key><true/>" >> $PLISTFILE
-    echo "  <key>NSSupportsAutomaticGraphicsSwitching</key><true/>" >> $PLISTFILE
-    echo "  <key>LSUIElement</key><true/>" >> $PLISTFILE
+    echo "  <key>NSHighResolutionCapable</key>" >> $PLISTFILE
+    echo "  <true/>" >> $PLISTFILE
+    echo "  <key>NSSupportsAutomaticGraphicsSwitching</key>" >> $PLISTFILE
+    echo "  <true/>" >> $PLISTFILE
+    echo "  <key>LSUIElement</key>" >> $PLISTFILE
+    echo "  <true/>" >> $PLISTFILE
     echo "</dict>" >> $PLISTFILE
     echo "</plist>" >> $PLISTFILE
 
@@ -142,17 +144,17 @@ function buildApp() {
     cp ${CLPATH}/build/vic-cloud ${VECTOR_CLOUD}/build/
     cp ${CLPATH}/pod-bot-install.sh ${VECTOR_CLOUD}
 
-    sudo install_name_tool \
+    install_name_tool \
     -change ${PODLIBS}/opus/arm64/lib/libopus.0.dylib \
     @executable_path/../Frameworks/libopus.0.dylib \
     ${APPDIR}/MacOS/WirePod
 
-    sudo install_name_tool \
+    install_name_tool \
     -change ${PODLIBS}/opus/amd64/lib/libopus.0.dylib \
     @executable_path/../Frameworks/libopus.0.dylib \
     ${APPDIR}/MacOS/WirePod
 
-    sudo install_name_tool \
+    install_name_tool \
     -change libvosk.dylib \
     @executable_path/../Frameworks/libvosk.dylib \
     ${APPDIR}/MacOS/WirePod
@@ -162,7 +164,7 @@ function buildDmg() {
     echo
     echo "Creating dmg"
     echo
-    sudo create-dmg \
+    create-dmg \
     --volname "WirePod Installer" \
     --window-size 1104 544 \
     --icon-size 100 \
