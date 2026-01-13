@@ -70,7 +70,6 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josephspurrier/goversioninfo v1.4.0 // indirect
 	github.com/jsummers/gobmp v0.0.0-20230614200233-a9de23ed2e25 // indirect
-	github.com/neurral/vosk-api/go v1.0.2 // indirect
 	github.com/kercre123/zeroconf v1.0.1 // indirect
 	github.com/lib/pq v1.7.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
@@ -148,3 +147,4 @@ replace github.com/soundhound/houndify-sdk-go => ./third-party/github.com/soundh
 replace github.com/vadv/gopher-lua-libs => ./third-party/github.com/vadv/gopher-lua-libs
 replace github.com/yuin/gopher-lua => ./third-party/github.com/yuin/gopher-lua
 replace github.com/wlynxg/anet => ./third-party/github.com/wlynxg/anet
+replace github.com/neurral/wire-pod/chipper => ./wire-pod/chipper
