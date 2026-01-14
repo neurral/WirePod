@@ -12,6 +12,7 @@ WirePod is a cross-platform software ecosystem for running voice assistant serve
 ### Core Components
 
 #### 1. Chipper Server (`wire-pod/chipper/`)
+
 - **Purpose**: Main voice processing server that communicates with Vector robots
 - **Technology**: Go with gRPC and HTTP APIs
 - **Key Features**:
@@ -22,7 +23,9 @@ WirePod is a cross-platform software ecosystem for running voice assistant serve
   - Web-based configuration interface (port 8080)
 
 #### 2. STT Services (`chipper/pkg/wirepod/stt/`)
+
 Supports multiple speech recognition engines:
+
 - **Vosk**: Offline, local STT (default for Android/iOS)
 - **Whisper.cpp**: Offline Whisper model implementation
 - **Coqui**: Online STT service
@@ -30,7 +33,9 @@ Supports multiple speech recognition engines:
 - **Leopard**: Picovoice's offline STT
 
 #### 3. Cross-Platform Packaging (`WirePod/`)
+
 Creates installable packages for:
+
 - **Android** (APK with GUI app)
 - **Windows** (ZIP installer)
 - **macOS** (app bundle)
@@ -97,6 +102,7 @@ WirePod/                    # Packaging and distribution
 ```
 
 ### Environment Variables
+
 - `STT_SERVICE`: STT provider (vosk, whisper.cpp, coqui, houndify, leopard)
 - `STT_LANGUAGE`: Language code for offline STT services
 - `WEATHERAPI_ENABLED`: Enable weather features
@@ -108,6 +114,7 @@ WirePod/                    # Packaging and distribution
 ### Building for Different Platforms
 
 #### Android APK
+
 ```bash
 cd WirePod/android
 ./build.sh 1.0.0
@@ -115,6 +122,7 @@ cd WirePod/android
 ```
 
 #### Windows Installer
+
 ```bash
 cd WirePod/windows
 ./build.sh
@@ -122,6 +130,7 @@ cd WirePod/windows
 ```
 
 #### macOS App
+
 ```bash
 cd WirePod/macos
 ./build.sh
@@ -129,6 +138,7 @@ cd WirePod/macos
 ```
 
 #### Linux (Direct)
+
 ```bash
 cd wire-pod
 # Use setup.sh or manual compilation
@@ -137,12 +147,14 @@ cd wire-pod
 ### Development Setup
 
 1. **Clone repositories**:
+
    ```bash
    git clone https://github.com/kercre123/wire-pod.git
    git clone https://github.com/neurral/WirePod.git
    ```
 
 2. **Install dependencies**:
+
    - Go 1.18+
    - Platform-specific toolchains (Android NDK, mingw-w64, etc.)
    - External libraries (Opus, Ogg, Vosk)
@@ -163,6 +175,7 @@ cd wire-pod
 ## Key Features & Capabilities
 
 ### Voice Processing Pipeline
+
 1. **Audio Capture**: Receives audio from robot via gRPC
 2. **Speech Recognition**: Converts speech to text using selected STT service
 3. **Intent Classification**: Matches text against intent database
@@ -171,12 +184,14 @@ cd wire-pod
 6. **Response Delivery**: Sends responses back to robot
 
 ### Supported Integrations
+
 - **OpenAI**: GPT models for knowledge responses
 - **Weather APIs**: OpenWeatherMap, etc.
 - **Custom Knowledge Graphs**: Intent-based conversation flows
 - **mDNS Discovery**: Automatic robot detection on network
 
 ### Security & Networking
+
 - **TLS Encryption**: All communications encrypted
 - **Certificate Management**: Auto-generated certificates for robot communication
 - **Escape Pod Mode**: Mimics official Anki servers
@@ -185,17 +200,20 @@ cd wire-pod
 ## Common Development Tasks
 
 ### Adding New STT Service
+
 1. Create new directory under `chipper/pkg/wirepod/stt/`
 2. Implement `STT` interface with `Init()`, `STT()`, `Name()` methods
 3. Add service to configuration options
 4. Update build tags and dependencies
 
 ### Modifying Intent Processing
+
 - Edit intent files in `chipper/intent-data/`
 - Modify processing logic in `chipper/pkg/wirepod/preqs/`
 - Update web interface for configuration
 
 ### Adding New Platform Support
+
 1. Create platform directory under `WirePod/`
 2. Implement build scripts for compilation and packaging
 3. Add platform-specific dependencies and libraries
@@ -204,23 +222,27 @@ cd wire-pod
 ## Troubleshooting
 
 ### Common Issues
+
 - **STT Service Not Working**: Check language configuration and model files
 - **Robot Not Connecting**: Verify certificates and network configuration
 - **Web Interface Not Loading**: Check port 8080 availability and firewall settings
 - **Build Failures**: Ensure all platform toolchains and dependencies are installed
 
 ### Debug Mode
+
 Set `DEBUG_LOGGING=true` for verbose output and detailed error messages.
 
 ## Deployment Considerations
 
 ### Production Setup
+
 - Use Escape Pod mode for seamless robot integration
 - Configure appropriate STT service based on privacy needs
 - Set up proper firewall rules for robot communication
 - Monitor logs for performance and error tracking
 
 ### Resource Requirements
+
 - **Offline STT**: Requires model files (Vosk/Whisper)
 - **Online STT**: Requires API keys and internet connectivity
 - **AI Features**: Requires API keys for OpenAI or similar services
