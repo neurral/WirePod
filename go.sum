@@ -406,6 +406,8 @@ github.com/kercre123/wire-pod/chipper v1.5.8 h1:juSh2kFxLeQMGExpAsa9oM7vx0cIXv9c
 github.com/kercre123/wire-pod/chipper v1.5.8/go.mod h1:CEAYy4CaJLpxX8PrlLxR54i9PCAqIV4bTJ+nR5WDA0I=
 github.com/kercre123/wire-pod/chipper v1.5.9 h1:EwSB6R8rBvaBINWXdRQZPxgrpFKVVtji/saTL3UjCz8=
 github.com/kercre123/wire-pod/chipper v1.5.9/go.mod h1:CEAYy4CaJLpxX8PrlLxR54i9PCAqIV4bTJ+nR5WDA0I=
+github.com/kercre123/wire-pod/chipper v1.5.10 h1:CElwRfEQQRiOnXKEa+eSrVbGlguqvTu0/hw+OHswZjU=
+github.com/kercre123/wire-pod/chipper v1.5.10/go.mod h1:d2z2ulcCZZfWDnLGlK356OcbiXROjZ1uw2gCsHOeDAU=
 github.com/kercre123/zeroconf v1.0.1 h1:Mbd8mN6xnNWYIqBN38x3jJjiPP2RmK4orzbGZsa1EOY=
 github.com/kercre123/zeroconf v1.0.1/go.mod h1:qYGgej0DBUELb5p0zVe8yvz3NIwJs+ws9/QD6FJOCS8=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=
@@ -575,6 +577,8 @@ github.com/sagikazarmark/slog-shim v0.1.0 h1:diDBnUNK9N/354PgrxMywXnAwEr1QZcOr6g
 github.com/sagikazarmark/slog-shim v0.1.0/go.mod h1:SrcSrq8aKtyuqEI1uvTDTK1arOWRIczQRv+GVI1AkeQ=
 github.com/sashabaranov/go-openai v1.27.1 h1:7Nx6db5NXbcoutNmAUQulEQZEpHG/SkzfexP2X5RWMk=
 github.com/sashabaranov/go-openai v1.27.1/go.mod h1:lj5b/K+zjTSFxVLijLSTDZuP7adOgerWeFyZLUhAKRg=
+github.com/sashabaranov/go-openai v1.41.2 h1:vfPRBZNMpnqu8ELsclWcAvF19lDNgh1t6TVfFFOPiSM=
+github.com/sashabaranov/go-openai v1.41.2/go.mod h1:lj5b/K+zjTSFxVLijLSTDZuP7adOgerWeFyZLUhAKRg=
 github.com/schollz/progressbar/v3 v3.7.4/go.mod h1:1H8m5kMPW6q5fyjpDqtBHW1JT22mu2NwHQ1ApuCPh/8=
 github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529/go.mod h1:DxrIzT+xaE7yg65j358z/aeFdxmN0P9QXhEzd20vsDc=
 github.com/shurcooL/go v0.0.0-20200502201357-93f07166e636/go.mod h1:TDJrrUr11Vxrven61rcy3hJMUqaf/CLWYhHNPmT14Lk=
