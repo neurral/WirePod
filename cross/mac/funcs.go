@@ -99,6 +99,13 @@ func (w *MacOS) ReadConfig() (all.WPConfig, error) {
 		}
 	}
 
+	// Heal stale InstallPath if the application bundle was renamed or moved
+	currentInstallPath := filepath.Dir(execu) + "/../Frameworks"
+	if conf.InstallPath != currentInstallPath {
+		conf.InstallPath = currentInstallPath
+		w.WriteConfig(conf)
+	}
+
 	return conf, nil
 }
 
