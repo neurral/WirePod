@@ -67,7 +67,7 @@ export GO_TAGS="nolibopusfile"
 
 export CGO_ENABLED=1
 export CGO_LDFLAGS="-L${PODLIBS}/ogg/lib -L${PODLIBS}/opus/lib -L${PODLIBS}/vosk"
-export CGO_CFLAGS="-I${PODLIBS}/ogg/include -I${PODLIBS}/opus/include -I${PODLIBS}/vosk"
+export CGO_CFLAGS="-I${PODLIBS}/ogg/include -I${PODLIBS}/opus/include -I${PODLIBS}/opus/include/opus -I${PODLIBS}/vosk"
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${PODLIBS}/opus/lib/pkgconfig
 
 x86_64-w64-mingw32-windres cmd/rc/app.rc -O coff -o cmd/app.syso

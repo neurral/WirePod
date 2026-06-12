@@ -54,9 +54,20 @@ function buildBinary() {
     export GOARCH=$1
     export CGO_ENABLED=1
     export CGO_LDFLAGS="-L${PODLIBS}/opus/$1/lib -L${PODLIBS}/vosk -mmacosx-version-min=11"
-    export CGO_CFLAGS="-I${PODLIBS}/opus/$1/include -I${PODLIBS}/vosk -mmacosx-version-min=11"
+    export CGO_CFLAGS="-I${PODLIBS}/opus/$1/include -I${PODLIBS}/opus/$1/include/opus -I${PODLIBS}/vosk -mmacosx-version-min=11"
     export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${PODLIBS}/opus/$1/lib/pkgconfig
     export SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
+
+    # Update prefix in opus.pc and install name ID in libopus.0.dylib to match the current
+    # local workspace path. This prevents hardcoded paths from absolute builds on other
+    # machines/directories from embedding wrong library paths during go build, ensuring
+    # that subsequent install_name_tool path overrides succeed.
+    if [[ -f "${PODLIBS}/opus/$1/lib/pkgconfig/opus.pc" ]]; then
+        sed -i '' "s|^prefix=.*|prefix=${PODLIBS}/opus/$1|g" "${PODLIBS}/opus/$1/lib/pkgconfig/opus.pc"
+    fi
+    if [[ -f "${PODLIBS}/opus/$1/lib/libopus.0.dylib" ]]; then
+        install_name_tool -id "${PODLIBS}/opus/$1/lib/libopus.0.dylib" "${PODLIBS}/opus/$1/lib/libopus.0.dylib"
+    fi
 
     go build \
     -tags nolibopusfile \
@@ -80,87 +91,87 @@ function buildApp() {
     fi
 
     APPDIR="target/${APP_NAME} v.${PODVER}.app/Contents"
-    PLISTFILE=${APPDIR}/Info.plist
-    MACOS=${APPDIR}/MacOS
-    RESOURCES=${APPDIR}/Resources
-    FRAMEWORKS=${APPDIR}/Frameworks
-    CHIPPER=${APPDIR}/Frameworks/chipper
-    VECTOR_CLOUD=${APPDIR}/Frameworks/vector-cloud
+    PLISTFILE="${APPDIR}/Info.plist"
+    MACOS="${APPDIR}/MacOS"
+    RESOURCES="${APPDIR}/Resources"
+    FRAMEWORKS="${APPDIR}/Frameworks"
+    CHIPPER="${APPDIR}/Frameworks/chipper"
+    VECTOR_CLOUD="${APPDIR}/Frameworks/vector-cloud"
 
-    mkdir -p ${MACOS}
-    mkdir -p ${RESOURCES}
-    mkdir -p ${FRAMEWORKS}
-    mkdir -p ${CHIPPER}
-    mkdir -p ${VECTOR_CLOUD}/build
+    mkdir -p "${MACOS}"
+    mkdir -p "${RESOURCES}"
+    mkdir -p "${FRAMEWORKS}"
+    mkdir -p "${CHIPPER}"
+    mkdir -p "${VECTOR_CLOUD}/build"
 
     buildBinary "arm64"
     buildBinary "amd64"
 
-    lipo -create ${PODLIBS}/opus/arm64/lib/libopus.0.dylib ${PODLIBS}/opus/amd64/lib/libopus.0.dylib -output ${PODLIBS}/opus/libopus.0.dylib
-    lipo -create tmp/WirePod-arm64 tmp/WirePod-amd64 -output ${MACOS}/WirePod
+    lipo -create "${PODLIBS}/opus/arm64/lib/libopus.0.dylib" "${PODLIBS}/opus/amd64/lib/libopus.0.dylib" -output "${PODLIBS}/opus/libopus.0.dylib"
+    lipo -create tmp/WirePod-arm64 tmp/WirePod-amd64 -output "${MACOS}/WirePod"
 
-    echo "<?xml version="1.0" encoding="UTF-8"?>" > $PLISTFILE
-    echo "<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">" >> $PLISTFILE
-    echo "<plist version="1.0">" >> $PLISTFILE
-    echo "<dict>" >> $PLISTFILE
-    echo "  <key>CFBundleGetInfoString</key>" >> $PLISTFILE
-    echo "  <string>WirePod ${PODVER}</string>" >> $PLISTFILE
-    echo "  <key>CFBundleExecutable</key>" >> $PLISTFILE
-    echo "  <string>WirePod</string>" >> $PLISTFILE
-    echo "  <key>CFBundleIdentifier</key>" >> $PLISTFILE
-    echo "  <string>io.github.neurral</string>" >> $PLISTFILE
-    echo "  <key>CFBundleName</key>" >> $PLISTFILE
-    echo "  <string>${APP_NAME} v.${PODVER}</string>" >> $PLISTFILE
-    echo "  <key>CFBundleDisplayName</key>" >> $PLISTFILE
-    echo "  <string>${APP_NAME} v.${PODVER}</string>" >> $PLISTFILE
-    echo "  <key>CFBundleIconFile</key>" >> $PLISTFILE
-    echo "  <string>icon.icns</string>" >> $PLISTFILE
-    echo "  <key>CFBundleVersion</key>" >> $PLISTFILE
-    echo "  <string>$PODVER</string>" >> $PLISTFILE
-    echo "  <key>CFBundleInfoDictionaryVersion</key>" >> $PLISTFILE
-    echo "  <string>6.0</string>" >> $PLISTFILE
-    echo "  <key>CFBundlePackageType</key>" >> $PLISTFILE
-    echo "  <string>APPL</string>" >> $PLISTFILE
-    echo "  <key>NSHighResolutionCapable</key>" >> $PLISTFILE
-    echo "  <true/>" >> $PLISTFILE
-    echo "  <key>NSSupportsAutomaticGraphicsSwitching</key>" >> $PLISTFILE
-    echo "  <true/>" >> $PLISTFILE
-    echo "  <key>LSUIElement</key>" >> $PLISTFILE
-    echo "  <true/>" >> $PLISTFILE
-    echo "</dict>" >> $PLISTFILE
-    echo "</plist>" >> $PLISTFILE
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > "$PLISTFILE"
+    echo "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> "$PLISTFILE"
+    echo "<plist version=\"1.0\">" >> "$PLISTFILE"
+    echo "<dict>" >> "$PLISTFILE"
+    echo "  <key>CFBundleGetInfoString</key>" >> "$PLISTFILE"
+    echo "  <string>WirePod ${PODVER}</string>" >> "$PLISTFILE"
+    echo "  <key>CFBundleExecutable</key>" >> "$PLISTFILE"
+    echo "  <string>WirePod</string>" >> "$PLISTFILE"
+    echo "  <key>CFBundleIdentifier</key>" >> "$PLISTFILE"
+    echo "  <string>io.github.neurral</string>" >> "$PLISTFILE"
+    echo "  <key>CFBundleName</key>" >> "$PLISTFILE"
+    echo "  <string>${APP_NAME} v.${PODVER}</string>" >> "$PLISTFILE"
+    echo "  <key>CFBundleDisplayName</key>" >> "$PLISTFILE"
+    echo "  <string>${APP_NAME} v.${PODVER}</string>" >> "$PLISTFILE"
+    echo "  <key>CFBundleIconFile</key>" >> "$PLISTFILE"
+    echo "  <string>icon.icns</string>" >> "$PLISTFILE"
+    echo "  <key>CFBundleVersion</key>" >> "$PLISTFILE"
+    echo "  <string>$PODVER</string>" >> "$PLISTFILE"
+    echo "  <key>CFBundleInfoDictionaryVersion</key>" >> "$PLISTFILE"
+    echo "  <string>6.0</string>" >> "$PLISTFILE"
+    echo "  <key>CFBundlePackageType</key>" >> "$PLISTFILE"
+    echo "  <string>APPL</string>" >> "$PLISTFILE"
+    echo "  <key>NSHighResolutionCapable</key>" >> "$PLISTFILE"
+    echo "  <true/>" >> "$PLISTFILE"
+    echo "  <key>NSSupportsAutomaticGraphicsSwitching</key>" >> "$PLISTFILE"
+    echo "  <true/>" >> "$PLISTFILE"
+    echo "  <key>LSUIElement</key>" >> "$PLISTFILE"
+    echo "  <true/>" >> "$PLISTFILE"
+    echo "</dict>" >> "$PLISTFILE"
+    echo "</plist>" >> "$PLISTFILE"
 
     export CHPATH="../wire-pod/chipper"
     export CLPATH="../wire-pod/vector-cloud"
 
-    cp -r ../icons/* ${RESOURCES}
-    cp -r ../icons ${RESOURCES}/
-    echo "${PODVER}" > ${RESOURCES}/version
-    cp ${PODLIBS}/opus/libopus.0.dylib ${FRAMEWORKS}    
-    cp ${PODLIBS}/vosk/libvosk.dylib ${FRAMEWORKS}
-    cp ${CHPATH}/weather-map.json ${CHIPPER}
-    cp -r ${CHPATH}/intent-data ${CHIPPER}
-    cp -r ${CHPATH}/webroot ${CHIPPER}
-    cp -r ${CHPATH}/epod ${CHIPPER}
-    cp -r ${CHPATH}/stttest.pcm ${CHIPPER}
-    echo "${PODVER}" > ${CHIPPER}/version
-    cp ${CLPATH}/build/vic-cloud ${VECTOR_CLOUD}/build/
-    cp ${CLPATH}/pod-bot-install.sh ${VECTOR_CLOUD}
+    cp -r ../icons/* "${RESOURCES}"
+    cp -r ../icons "${RESOURCES}/"
+    echo "${PODVER}" > "${RESOURCES}/version"
+    cp "${PODLIBS}/opus/libopus.0.dylib" "${FRAMEWORKS}"    
+    cp "${PODLIBS}/vosk/libvosk.dylib" "${FRAMEWORKS}"
+    cp "${CHPATH}/weather-map.json" "${CHIPPER}"
+    cp -r "${CHPATH}/intent-data" "${CHIPPER}"
+    cp -r "${CHPATH}/webroot" "${CHIPPER}"
+    cp -r "${CHPATH}/epod" "${CHIPPER}"
+    cp -r "${CHPATH}/stttest.pcm" "${CHIPPER}"
+    echo "${PODVER}" > "${CHIPPER}/version"
+    cp "${CLPATH}/build/vic-cloud" "${VECTOR_CLOUD}/build/"
+    cp "${CLPATH}/pod-bot-install.sh" "${VECTOR_CLOUD}"
 
     install_name_tool \
-    -change ${PODLIBS}/opus/arm64/lib/libopus.0.dylib \
+    -change "${PODLIBS}/opus/arm64/lib/libopus.0.dylib" \
     @executable_path/../Frameworks/libopus.0.dylib \
-    ${APPDIR}/MacOS/WirePod
+    "${APPDIR}/MacOS/WirePod"
 
     install_name_tool \
-    -change ${PODLIBS}/opus/amd64/lib/libopus.0.dylib \
+    -change "${PODLIBS}/opus/amd64/lib/libopus.0.dylib" \
     @executable_path/../Frameworks/libopus.0.dylib \
-    ${APPDIR}/MacOS/WirePod
+    "${APPDIR}/MacOS/WirePod"
 
     install_name_tool \
     -change libvosk.dylib \
     @executable_path/../Frameworks/libvosk.dylib \
-    ${APPDIR}/MacOS/WirePod
+    "${APPDIR}/MacOS/WirePod"
 }
 
 function buildDmg() {
