@@ -2,75 +2,142 @@
 
 ## Overview
 
-WirePod is a cross-platform software ecosystem for running voice assistant servers on Anki Vector robots. It consists of two main components:
+WirePod is a sophisticated, cross-platform software ecosystem designed to run custom, local voice assistant servers for Anki/Digital Dream Labs Vector 1.0 and 2.0 robots. The project is designed to provide privacy-focused, customizable voice capabilities without relying on discontinued official cloud services.
 
-- **wire-pod**: The core server software (chipper) that enables voice commands on Anki Vector 1.0 and 2.0 robots
-- **WirePod**: Cross-platform packaging and distribution system that creates user-installable packages of wire-pod for different operating systems
+It consists of two main components:
+- **wire-pod**: The core server software (chipper) that provides voice processing capabilities.
+- **WirePod**: The cross-platform packaging system that creates user-installable applications for various operating systems.
 
-## Architecture
+---
+
+## Architecture & Components
 
 ### Core Components
 
 #### 1. Chipper Server (`wire-pod/chipper/`)
+- **Purpose**: Main voice processing server that communicates with the Vector robot.
+- **Technology**: Go with gRPC and HTTP APIs.
+- **Key Features**: Speech-to-Text (STT) processing, intent classification, knowledge graph integration, weather API support, and a web configuration interface.
 
-- **Purpose**: Main voice processing server that communicates with Vector robots
-- **Technology**: Go with gRPC and HTTP APIs
-- **Key Features**:
-  - Speech-to-Text (STT) processing
-  - Intent recognition and processing
-  - Knowledge graph integration
-  - Weather API support
-  - Web-based configuration interface (port 8080)
+#### 2. STT Services (`wire-pod/chipper/pkg/wirepod/stt/`)
+- **Purpose**: Multiple speech recognition engines implemented under a common interface.
+- **Engines**: Vosk (local, default), Whisper, Whisper.cpp, Coqui, Houndify, Leopard (Picovoice).
 
-#### 2. STT Services (`chipper/pkg/wirepod/stt/`)
+#### 3. Vector Cloud Communication Layer (`wire-pod/vector-cloud/`)
+- **Purpose**: Handles robot communication and Emulation/Escape Pod mode gateway.
+- **Key Components**:
+  - Gateway service for robot connectivity
+  - IPC (Inter-Process Communication) management
+  - Message handling and routing
+  - Certificate management
 
-Supports multiple speech recognition engines:
+#### 4. Cross-Platform Packaging (`WirePod/`)
+- **Purpose**: Creates installer packages for:
+  - **Android**: APK with GUI interface ([WirePod/android/](file:///Volumes/Dev/etal/Vector/WirePod/android/))
+  - **Windows**: ZIP installer ([WirePod/windows/](file:///Volumes/Dev/etal/Vector/WirePod/windows/))
+  - **macOS**: App bundle ([WirePod/macos/](file:///Volumes/Dev/etal/Vector/WirePod/macos/))
+  - **Linux/Debian**: Debian packages and script installation ([WirePod/debian/](file:///Volumes/Dev/etal/Vector/WirePod/debian/))
+  - **Cross Utilities**: Shared cross-platform packaging logic ([WirePod/cross/](file:///Volumes/Dev/etal/Vector/WirePod/cross/))
 
-- **Vosk**: Offline, local STT (default for Android/iOS)
-- **Whisper.cpp**: Offline Whisper model implementation
-- **Coqui**: Online STT service
-- **Houndify**: Cloud-based STT service
-- **Leopard**: Picovoice's offline STT
-
-#### 3. Cross-Platform Packaging (`WirePod/`)
-
-Creates installable packages for:
-
-- **Android** (APK with GUI app)
-- **Windows** (ZIP installer)
-- **macOS** (app bundle)
-- **Linux** (direct installation)
-
-### Key Directories Structure
+### Directory Structure
 
 ```
-wire-pod/                    # Core server code
-├── chipper/                # Main server application
-│   ├── pkg/
-│   │   ├── initwirepod/   # Server initialization
-│   │   ├── wirepod/       # Voice processing core
-│   │   │   ├── stt/       # STT service implementations
-│   │   │   ├── preqs/     # Preprocessing and requests
-│   │   │   └── setup/     # Configuration setup
-│   │   ├── vars/          # Configuration management
-│   │   └── servers/       # gRPC/HTTP servers
-│   ├── webroot/           # Web interface files
-│   ├── intent-data/       # Intent recognition data
-│   └── epod/              # Escape Pod configuration
-└── vector-cloud/          # Robot communication layer
-
 WirePod/                    # Packaging and distribution
-├── android/               # Android APK builder
-├── windows/               # Windows installer builder
-├── macos/                 # macOS app builder
-├── debian/                # Linux package builder
-└── cross/                 # Cross-platform utilities
+├── android/                # Android APK builder
+├── windows/                # Windows installer builder
+├── macos/                  # macOS app builder
+├── debian/                 # Linux package builder
+├── cross/                  # Cross-platform packaging utilities
+└── third-party/            # Vendored third-party dependencies
+
+wire-pod/                   # Core server code (Git submodule)
+├── chipper/                # Main chipper server application
+│   ├── cmd/                # Build targets (vosk, coqui, leopard, experimental)
+│   ├── intent-data/        # Intent classification database
+│   ├── webroot/            # Web interface files (port 8080)
+│   ├── epod/               # Escape Pod certificate templates
+│   ├── jdocs/              # Robot JDOCS storage
+│   ├── plugins/            # Plugin system
+│   └── pkg/
+│       ├── initwirepod/    # Server initialization & web config
+│       ├── scripting/      # Lua scripting integration
+│       └── wirepod/        # Voice processing core
+│           ├── config-ws/  # Configuration websocket
+│           ├── localization/ # Localization support
+│           ├── preqs/      # Preprocessing and intent requests
+│           ├── sdkapp/     # Embedded Vector SDK application
+│           ├── setup/      # Configuration setup
+│           ├── speechrequest/ # Speech request handling
+│           ├── stt/        # STT engine implementations
+│           └── ttr/        # Text-to-response (knowledge graph, commands)
+└── vector-cloud/           # Robot communication/gateway layer
 ```
+
+---
+
+## Development Setup
+
+### Prerequisites
+- **Go**: Version 1.18+ (project uses Go 1.21/1.18 compatibility features).
+- **Platform Toolchains**:
+  - Android: Android SDK/NDK, `fyne` package (`go install fyne.io/fyne/v2/cmd/fyne@latest`).
+  - Windows: MinGW-w64 toolchain.
+  - macOS: Xcode command line tools.
+- **External Dependencies**: Opus audio codec, Ogg container format, STT models (Vosk/Whisper). All dependencies should be resolved locally (see [THIRD_PARTY_REPOSITORIES.md](file:///Volumes/Dev/etal/Vector/WirePod/THIRD_PARTY_REPOSITORIES.md) for local replacements in `go.mod`).
+
+### Development Setup
+1. **Clone the repositories**:
+   ```bash
+   git clone https://github.com/kercre123/wire-pod.git
+   git clone https://github.com/neurral/WirePod.git
+   ```
+2. **Install dependencies**:
+   Run `./setup.sh` in the `wire-pod` directory to set up local STT models and compile any system dependencies.
+3. **Build Core Chipper Server**:
+   ```bash
+   cd wire-pod/chipper
+   go mod download
+   # Build the server with specific STT tags (Vosk is default)
+   go build ./cmd/vosk
+   ```
+
+---
+
+## Development Workflow & Platform Builds
+
+### Android APK Build
+```bash
+cd WirePod/android
+./build.sh 1.0.0
+```
+- **Requirements**:
+  - NDK/SDK paths configured.
+  - Android signing keystore located at `key/ks.jks` and password file at `key/passwd`.
+
+### Windows Build
+```bash
+cd WirePod/windows
+./build.sh
+```
+- **Output**: `wire-pod-win-amd64.zip`
+- **Requirements**: MinGW cross-compiler installed.
+
+### macOS Build
+```bash
+cd WirePod/macos
+./build.sh
+```
+- **Output**: `WirePod.app` bundle.
+
+### Linux (Direct Installation)
+Refer to `./setup.sh` or compile/run the Go target directly from the `wire-pod` folder.
+
+---
 
 ## Configuration System
 
-### Configuration File (`apiConfig.json`)
-
+### `apiConfig.json` Structure
+The server configuration is stored in `apiConfig.json`. Example structure:
 ```json
 {
   "weather": {
@@ -102,165 +169,79 @@ WirePod/                    # Packaging and distribution
 ```
 
 ### Environment Variables
+- `DEBUG_LOGGING=true`: Enable verbose logging.
+- `WEATHERAPI_ENABLED`: Enable/disable weather checks.
+- `KNOWLEDGE_ENABLED`: Enable/disable OpenAI/Knowledge checks.
+- `STT_SERVICE`: Selected STT provider (`vosk`, `whisper.cpp`, `coqui`, `houndify`, `leopard`).
+- `STT_LANGUAGE`: Selected language (e.g. `en-US`).
 
-- `STT_SERVICE`: STT provider (vosk, whisper.cpp, coqui, houndify, leopard)
-- `STT_LANGUAGE`: Language code for offline STT services
-- `WEATHERAPI_ENABLED`: Enable weather features
-- `KNOWLEDGE_ENABLED`: Enable AI knowledge features
-- `DEBUG_LOGGING`: Enable verbose logging
-
-## Development Workflow
-
-### Building for Different Platforms
-
-#### Android APK
-
-```bash
-cd WirePod/android
-./build.sh 1.0.0
-# Requires: Android SDK, NDK, fyne, signing keystore
-```
-
-#### Windows Installer
-
-```bash
-cd WirePod/windows
-./build.sh
-# Builds: wire-pod-win-amd64.zip
-```
-
-#### macOS App
-
-```bash
-cd WirePod/macos
-./build.sh
-# Creates: WirePod.app bundle
-```
-
-#### Linux (Direct)
-
-```bash
-cd wire-pod
-# Use setup.sh or manual compilation
-```
-
-### Development Setup
-
-1. **Clone repositories**:
-
-   ```bash
-   git clone https://github.com/kercre123/wire-pod.git
-   git clone https://github.com/neurral/WirePod.git
-   ```
-
-2. **Install dependencies**:
-
-   - Go 1.18+
-   - Platform-specific toolchains (Android NDK, mingw-w64, etc.)
-   - External libraries (Opus, Ogg, Vosk)
-
-3. **Build core server**:
-   ```bash
-   cd wire-pod/chipper
-   go mod download
-   go build ./cmd/coqui  # or other STT service
-   ```
-
-### Testing
-
-- **Unit tests**: Run `go test` in individual packages
-- **Integration testing**: Use the web interface at `http://localhost:8080`
-- **Robot testing**: Requires physical Vector robot or simulation environment
-
-## Key Features & Capabilities
-
-### Voice Processing Pipeline
-
-1. **Audio Capture**: Receives audio from robot via gRPC
-2. **Speech Recognition**: Converts speech to text using selected STT service
-3. **Intent Classification**: Matches text against intent database
-4. **Knowledge Processing**: Queries AI services for responses
-5. **Text-to-Speech**: Generates audio responses (when enabled)
-6. **Response Delivery**: Sends responses back to robot
-
-### Supported Integrations
-
-- **OpenAI**: GPT models for knowledge responses
-- **Weather APIs**: OpenWeatherMap, etc.
-- **Custom Knowledge Graphs**: Intent-based conversation flows
-- **mDNS Discovery**: Automatic robot detection on network
-
-### Security & Networking
-
-- **TLS Encryption**: All communications encrypted
-- **Certificate Management**: Auto-generated certificates for robot communication
-- **Escape Pod Mode**: Mimics official Anki servers
-- **Port Configuration**: Flexible port assignment (443 default for EP mode)
+---
 
 ## Common Development Tasks
 
-### Adding New STT Service
+### 1. Adding a New STT Service
+1. Create a subpackage under `wire-pod/chipper/pkg/wirepod/stt/` (e.g., `stt/mynewstt/`).
+2. Follow the pattern of existing STT implementations (e.g., `stt/vosk/` or `stt/whisper.cpp/`). Each STT engine is a standalone package with build-tag-guarded compilation.
+3. Create a corresponding build target under `wire-pod/chipper/cmd/` for standalone builds.
+4. Update build tags in Go files, register the service in the initialization flow, and add it as an option in the web UI config.
 
-1. Create new directory under `chipper/pkg/wirepod/stt/`
-2. Implement `STT` interface with `Init()`, `STT()`, `Name()` methods
-3. Add service to configuration options
-4. Update build tags and dependencies
+### 2. Modifying Intent Processing
+- UTTERANCES are registered in language JSON files in `wire-pod/chipper/intent-data/`.
+- Intent parsing and match handlers are located in `wire-pod/chipper/pkg/wirepod/preqs/`.
+- Custom Intents can be registered following this schema:
+  ```json
+  {
+    "intents": [
+      {
+        "name": "custom_intent",
+        "utterances": ["custom phrase"],
+        "handler": "custom_handler"
+      }
+    ]
+  }
+  ```
 
-### Modifying Intent Processing
+### 3. Web Interface Development
+- **Assets & Static Pages**: Located under `wire-pod/chipper/webroot/`.
+- **Pages**: `index.html` (landing page), `setup.html` (initial robot configuration), `initial.html` (main management dashboard), and `sdkapp/` (embedded Vector SDK application).
+- The web configuration interface runs on port `8080` by default.
+- The Escape Pod / robot communication gateway runs on port `443` (TLS) — these are separate services.
 
-- Edit intent files in `chipper/intent-data/`
-- Modify processing logic in `chipper/pkg/wirepod/preqs/`
-- Update web interface for configuration
+### 4. Vector Cloud & Robot Gateway
+- Gateway and Inter-Process Communication (IPC) logic is located in `wire-pod/vector-cloud/`.
+- Configured via IPC and gateway message handlers. Emulates official Anki servers securely by serving TLS certificates located under `wire-pod/chipper/epod/`.
 
-### Adding New Platform Support
+---
 
-1. Create platform directory under `WirePod/`
-2. Implement build scripts for compilation and packaging
-3. Add platform-specific dependencies and libraries
-4. Update main WirePod build system
+## Testing & Deployment
 
-## Troubleshooting
+### Testing Guidelines
+- **Unit Tests**: Run `go test ./...` in `wire-pod/chipper/` to test logic.
+- **Integration/Web**: Run the server locally, visit `http://localhost:8080` and verify configuration screens.
+- **Robot Interaction**: Connect a physical Vector robot configured to point to your development server. Ensure TLS certificates and ports (port 443 / Escape Pod emulation) are aligned.
 
-### Common Issues
+### Deployment Checklist
+- [ ] Local third-party dependencies resolved (e.g., `go.mod` replace directives pointing to local clones).
+- [ ] STT engine and matching model downloaded/active.
+- [ ] Certs generated under `/epod/` if running in Escape Pod mode.
+- [ ] Port `443` (for Escape Pod) or target port open in firewall.
+- [ ] Build compiled for the target platform.
 
-- **STT Service Not Working**: Check language configuration and model files
-- **Robot Not Connecting**: Verify certificates and network configuration
-- **Web Interface Not Loading**: Check port 8080 availability and firewall settings
-- **Build Failures**: Ensure all platform toolchains and dependencies are installed
+---
 
-### Debug Mode
+## Best Practices
 
-Set `DEBUG_LOGGING=true` for verbose output and detailed error messages.
+### Code & Structure
+- Keep `wire-pod` core voice logic separate from platform packaging files under `WirePod/`.
+- Keep environment configurations out of code; utilize `apiConfig.json` and environmental variables.
+- Maintain backward compatibility with existing robot endpoints.
 
-## Deployment Considerations
+### Performance
+- Optimize speech processing pipelines for resource-constrained systems (Vosk models, local memory usage).
+- Cache intent resolution patterns and recurring weather/API calls.
 
-### Production Setup
-
-- Use Escape Pod mode for seamless robot integration
-- Configure appropriate STT service based on privacy needs
-- Set up proper firewall rules for robot communication
-- Monitor logs for performance and error tracking
-
-### Resource Requirements
-
-- **Offline STT**: Requires model files (Vosk/Whisper)
-- **Online STT**: Requires API keys and internet connectivity
-- **AI Features**: Requires API keys for OpenAI or similar services
-- **Storage**: ~500MB for models and web assets
-
-## Contributing Guidelines
-
-- Follow Go coding standards and project structure
-- Test changes across multiple platforms when possible
-- Update documentation for new features
-- Maintain backward compatibility with existing configurations
-- Use semantic versioning for releases
+---
 
 ## Support Resources
-
-- **Official Wiki**: https://github.com/kercre123/wire-pod/wiki
-- **Installation Guide**: Comprehensive setup instructions
-- **Troubleshooting**: Common issues and solutions
-- **Community**: GitHub issues and discussions
-
-This project enables Vector robots to have fully functional voice capabilities without relying on Anki's discontinued cloud services, providing a privacy-focused alternative with extensive customization options.
+- **Wiki**: https://github.com/kercre123/wire-pod/wiki
+- **Original Source**: https://github.com/kercre123/wire-pod

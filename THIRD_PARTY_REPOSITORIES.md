@@ -6,16 +6,20 @@ This document summarizes all external GitHub repositories that have been cloned 
 
 ## Cloned Repositories
 
-All repositories have been cloned to `/Users/rxcs/Dev/etal/WirePod/third-party/github.com/` with their original GitHub structure preserved.
+All repositories have been cloned to `/Volumes/Dev/etal/Vector/WirePod/third-party/github.com/` with their original GitHub structure preserved.
 
 ### Go Import Dependencies
 
 | Original Repository | Local Path | Purpose | Status |
 |---------------------|------------|---------|--------|
 | `github.com/digital-dream-labs/api` | `third-party/github.com/digital-dream-labs/api/` | Chipper protocol buffers | ✅ Cloned |
+| `github.com/digital-dream-labs/hugh` | `third-party/github.com/digital-dream-labs/hugh/` | Internal helper library | ✅ Cloned |
+| `github.com/digital-dream-labs/opus-go` | `third-party/github.com/digital-dream-labs/opus-go/` | Opus audio Go bindings | ✅ Cloned |
+| `github.com/digital-dream-labs/vector-bluetooth` | `third-party/github.com/digital-dream-labs/vector-bluetooth/` | Vector Bluetooth communication | ✅ Cloned |
 | `github.com/fforchino/vector-go-sdk` | `third-party/github.com/fforchino/vector-go-sdk/` | Vector robot SDK | ✅ Cloned |
 | `github.com/sashabaranov/go-openai` | `third-party/github.com/sashabaranov/go-openai/` | OpenAI client library | ✅ Cloned |
 | `github.com/bramvdbogaerde/go-scp` | `third-party/github.com/bramvdbogaerde/go-scp/` | SCP client for robot deployment | ✅ Cloned |
+| `github.com/grandcat/zeroconf` | `third-party/github.com/grandcat/zeroconf/` | mDNS/ZeroConf service discovery | ✅ Cloned |
 | `github.com/pkg/errors` | `third-party/github.com/pkg/errors/` | Error handling utilities | ✅ Cloned |
 | `github.com/soundhound/houndify-sdk-go` | `third-party/github.com/soundhound/houndify-sdk-go/` | Houndify STT service | ✅ Cloned |
 | `github.com/vadv/gopher-lua-libs` | `third-party/github.com/vadv/gopher-lua-libs/` | Lua scripting libraries | ✅ Cloned |
@@ -35,22 +39,13 @@ All repositories have been cloned to `/Users/rxcs/Dev/etal/WirePod/third-party/g
 
 ## Next Steps
 
-### 1. Update Go Import Paths
+### 1. Clone Missing Repositories
 
-The following files need their import paths updated to point to local repositories:
+All required repositories are now successfully cloned locally in the `third-party` directory. No further manual cloning is required.
 
-#### WirePod (packaging) - go.mod
-- `github.com/digital-dream-labs/api v0.0.0-20210824232136-8cc90c1bb12c`
-- `github.com/digital-dream-labs/hugh v0.0.0-20210210154335-f4159b9fcd5f`
-- `github.com/fforchino/vector-go-sdk v0.0.0-20231108155304-62168f3595d6`
-- `github.com/go-ole/go-ole v1.3.0`
-- `github.com/soheilhy/cmux v0.1.5`
-- `github.com/wlynxg/anet v0.0.1`
+### 2. Import Path Resolution (via go.mod replace directives)
 
-#### WirePod Android - android/main.go
-- `github.com/wlynxg/anet`
-
-### 2. Update WirePod Go Imports
+Import paths in source code files do **not** need to be changed. Go `replace` directives in `go.mod` handle the redirection from remote import paths to local third-party directories transparently. The following files use imports that are already resolved through existing replace directives:
 
 #### wire-pod/chipper/pkg/wirepod/ttr/matchIntentSend.go
 - `pb "github.com/digital-dream-labs/api/go/chipperpb"`
@@ -102,10 +97,10 @@ The following files need their import paths updated to point to local repositori
 #### WirePod/android/build.sh (Dockerfile)
 - Line 74: `https://github.com/alphacep/vosk-api/releases/download/v${VOSK_VERSION}/${VOSK_PKG}`
 
-### 4. Update go.mod Files
+### 3. Update go.mod Files (if adding new local dependencies)
 
 #### WirePod/go.mod
-Update to use local replace directives:
+Add replace directives for any newly cloned repos:
 ```
 replace github.com/digital-dream-labs/api => ./third-party/github.com/digital-dream-labs/api
 replace github.com/fforchino/vector-go-sdk => ./third-party/github.com/fforchino/vector-go-sdk
@@ -114,7 +109,9 @@ replace github.com/sashabaranov/go-openai => ./third-party/github.com/sashabaran
 ```
 
 #### wire-pod/chipper/go.mod
-Similar replace directives needed for the core server.
+Similar replace directives already exist (using `../../../third-party/` relative paths).
+
+> **Note:** The WirePod module is `github.com/neurral/WirePod` while the chipper module is still `github.com/kercre123/wire-pod/chipper`. The WirePod go.mod bridges this via `replace github.com/neurral/wire-pod/chipper => ./wire-pod/chipper`. This intentional remapping means the chipper module name does not need to change.
 
 ## Directory Structure
 
@@ -124,9 +121,14 @@ WirePod/third-party/github.com/
 ├── asticode/go-asticoqui/      # Coqui Go bindings
 ├── bramvdbogaerde/go-scp/      # SCP client
 ├── coqui-ai/STT/               # Coqui STT framework
-├── digital-dream-labs/api/     # Chipper API definitions
+├── digital-dream-labs/
+│   ├── api/                    # Chipper API definitions
+│   ├── hugh/                   # Internal helper library
+│   ├── opus-go/                # ✅ Cloned
+│   └── vector-bluetooth/       # ✅ Cloned
 ├── fforchino/vector-go-sdk/    # Vector robot SDK
 ├── ggerganov/whisper.cpp/      # Whisper.cpp STT
+├── grandcat/zeroconf/          # mDNS/ZeroConf
 ├── pkg/errors/                 # Error handling
 ├── sashabaranov/go-openai/     # OpenAI client
 ├── soundhound/houndify-sdk-go/ # Houndify STT
@@ -151,8 +153,7 @@ WirePod/third-party/github.com/
 
 ## Status
 
-- ✅ All external repositories cloned
-- ⏳ Go import paths need updating
-- ⏳ Build scripts need updating
-- ⏳ go.mod files need replace directives
+- ✅ All 17 external repositories cloned and resolved locally
+- ✅ go.mod files updated with replace directives (WirePod/go.mod and wire-pod/chipper/go.mod)
+- ⏳ Build scripts need updating (to build from local dependencies instead of downloading releases)
 - ⏳ Testing and validation needed
