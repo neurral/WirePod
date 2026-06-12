@@ -102,7 +102,7 @@ require (
 	github.com/rymdport/portal v0.2.2 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
-	github.com/sashabaranov/go-openai v1.27.1 // indirect
+	github.com/sashabaranov/go-openai v1.41.2 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/soundhound/houndify-sdk-go v0.3.5 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
@@ -159,7 +159,7 @@ replace github.com/vadv/gopher-lua-libs => ./third-party/github.com/vadv/gopher-
 
 replace github.com/yuin/gopher-lua => ./third-party/github.com/yuin/gopher-lua
 
-replace github.com/neurral/wire-pod/chipper => ./wire-pod/chipper
+replace github.com/kercre123/wire-pod/chipper => ./wire-pod/chipper
 
 replace github.com/wlynxg/anet => ./third-party/github.com/wlynxg/anet
 
