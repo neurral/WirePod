@@ -7,6 +7,7 @@ GOLDFLAGS="-X 'github.com/neurral/wire-pod/chipper/pkg/vars.CommitSHA=${WP_COMMI
 
 
 export PODVER="$1"
+export APP_NAME="WirePod - Neurral"
 
 if [[ ${PODVER} == "" ]]; then
 	echo "You must provide a version (v1.0.0)."
@@ -78,7 +79,7 @@ function buildApp() {
         cd ${ORIGDIR}
     fi
 
-    APPDIR=target/WirePod.app/Contents
+    APPDIR="target/${APP_NAME} v.${PODVER}.app/Contents"
     PLISTFILE=${APPDIR}/Info.plist
     MACOS=${APPDIR}/MacOS
     RESOURCES=${APPDIR}/Resources
@@ -109,7 +110,9 @@ function buildApp() {
     echo "  <key>CFBundleIdentifier</key>" >> $PLISTFILE
     echo "  <string>io.github.neurral</string>" >> $PLISTFILE
     echo "  <key>CFBundleName</key>" >> $PLISTFILE
-    echo "  <string>WirePod ${PODVER}</string>" >> $PLISTFILE
+    echo "  <string>${APP_NAME} v.${PODVER}</string>" >> $PLISTFILE
+    echo "  <key>CFBundleDisplayName</key>" >> $PLISTFILE
+    echo "  <string>${APP_NAME} v.${PODVER}</string>" >> $PLISTFILE
     echo "  <key>CFBundleIconFile</key>" >> $PLISTFILE
     echo "  <string>icon.icns</string>" >> $PLISTFILE
     echo "  <key>CFBundleVersion</key>" >> $PLISTFILE
@@ -165,14 +168,14 @@ function buildDmg() {
     echo "Creating dmg"
     echo
     create-dmg \
-    --volname "WirePod Installer" \
+    --volname "${APP_NAME} Installer" \
     --window-size 1104 544 \
     --icon-size 100 \
-    --icon "WirePod.app" 343 269 \
-    --hide-extension "WirePod.app" \
+    --icon "${APP_NAME} v.${PODVER}.app" 343 269 \
+    --hide-extension "${APP_NAME} v.${PODVER}.app" \
     --background "viceyes.png" \
     --app-drop-link 777 269 \
-    target/WirePod-${PODVER}.dmg \
+    "target/${APP_NAME}-${PODVER}.dmg" \
     target/
 }
 
