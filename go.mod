@@ -162,3 +162,7 @@ replace github.com/yuin/gopher-lua => ./third-party/github.com/yuin/gopher-lua
 replace github.com/neurral/wire-pod/chipper => ./wire-pod/chipper
 
 replace github.com/wlynxg/anet => ./third-party/github.com/wlynxg/anet
+
+replace github.com/kercre123/WirePod => ./
+
+replace github.com/kercre123/vosk-api/go => ./third-party/github.com/alphacep/vosk-api/go

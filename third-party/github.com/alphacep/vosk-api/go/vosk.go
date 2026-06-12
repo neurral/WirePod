@@ -104,11 +104,11 @@ func (r *VoskRecognizer) SetSpkModel(spkModel *VoskSpkModel) {
 }
 
 // SetGrm sets which phrases to recognize on an already initialized recognizer.
-func (r *VoskRecognizer) SetGrm(grammar string) {
-	cgrammar := C.CString(grammar)
-	defer C.free(unsafe.Pointer(cgrammar))
-	C.vosk_recognizer_set_grm(r.rec, cgrammar)
-}
+// func (r *VoskRecognizer) SetGrm(grammar string) {
+// 	cgrammar := C.CString(grammar)
+// 	defer C.free(unsafe.Pointer(cgrammar))
+// 	C.vosk_recognizer_set_grm(r.rec, cgrammar)
+// }
 
 // SetMaxAlternatives configures the recognizer to output n-best results.
 func (r *VoskRecognizer) SetMaxAlternatives(maxAlternatives int) {
@@ -131,9 +131,9 @@ func (r *VoskRecognizer) SetPartialWords(words int) {
 // in milliseconds after we recognized something (usually around 0.5-1.0),
 // and max is the timeout for forcing utterance end in milliseconds
 // (usually around 20-30).
-func (r *VoskRecognizer) SetEndpointerDelays(startMax, end, max float64) {
-	C.vosk_recognizer_set_endpointer_delays(r.rec, C.float(startMax), C.float(end), C.float(max))
-}
+// func (r *VoskRecognizer) SetEndpointerDelays(startMax, end, max float64) {
+// 	C.vosk_recognizer_set_endpointer_delays(r.rec, C.float(startMax), C.float(end), C.float(max))
+// }
 
 // AcceptWaveform accepts and processes a new chunk of the voice data.
 func (r *VoskRecognizer) AcceptWaveform(buffer []byte) int {
