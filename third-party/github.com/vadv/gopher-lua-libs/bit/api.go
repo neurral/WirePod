@@ -78,7 +78,7 @@ func intToU32(i int) (uint32, error) {
 	if i < 0 {
 		return 0, fmt.Errorf("cannot convert negative int %d to uint32", i)
 	}
-	if i > math.MaxUint32 {
+	if int64(i) > math.MaxUint32 {
 		return 0, fmt.Errorf("int %d overflows uint32", i)
 	}
 	return uint32(i), nil
