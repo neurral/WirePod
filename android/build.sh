@@ -182,5 +182,11 @@ rm -f WirePod.apk.idsig
 rm -f vessel/WirePod.apk
 rm -f resources/static.zip
 rm -f static.go
+# Clean up temporary resources and local git modifications
+if [[ ${GHACTIONS} == "" ]]; then
+    echo "Cleaning up local git modifications..."
+    (cd .. && git checkout -- android/built-libs/arm64/lib/pkgconfig/*.pc android/built-libs/armv7/lib/pkgconfig/*.pc android/resources/ 2>/dev/null || true)
+fi
+
 mv WirePod.apk WirePod-$VERSION.apk
 echo "Build complete ./WirePod-$VERSION.apk"
