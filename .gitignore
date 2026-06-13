@@ -17,6 +17,7 @@
 /android/resources/webroot
 /android/resources/pod-bot-install.sh
 /android/resources/weather-map.json
+/android/resources/stttest.pcm
 /android/android-14
 /android/android-ndk
 /debian/build
